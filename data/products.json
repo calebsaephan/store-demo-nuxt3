@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "name": "underground-stompers",
+        "title": "Underground Stompers",
+        "price": 160,
+        "available": true,
+        "variations": []
+    },
+    {
+        "id": 3,
+        "name": "underground-stompers",
+        "title": "Underground Stompers",
+        "price": 20,
+        "available": true,
+        "variations": []
+    },
+    {
+        "id": 7234,
+        "name": "underground-stompers",
+        "title": "Underground Stompers",
+        "price": 80,
+        "available": true,
+        "variations": []
+    },
+    {
+        "id": 35,
+        "name": "underground-stompers",
+        "title": "Underground Stompers",
+        "price": 60,
+        "available": true,
+        "variations": []
+    },
+    {
+        "id": 95738,
+        "name": "underground-stompers",
+        "title": "Underground Stompers",
+        "price": 120,
+        "available": true,
+        "variations": []
+    }
+]
