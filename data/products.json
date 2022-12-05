@@ -13,7 +13,8 @@
         "title": "Underground Stompers",
         "price": 20,
         "available": true,
-        "variations": []
+        "variations": [],
+        "sale": "SALE"
     },
     {
         "id": 7234,
@@ -29,7 +30,8 @@
         "title": "Underground Stompers",
         "price": 60,
         "available": true,
-        "variations": []
+        "variations": [],
+        "sale": "CLEARANCE"
     },
     {
         "id": 95738,
@@ -37,6 +39,7 @@
         "title": "Underground Stompers",
         "price": 120,
         "available": true,
-        "variations": []
+        "variations": [],
+        "sale": "LIMITED"
     }
 ]
