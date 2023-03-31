@@ -1,28 +1,19 @@
 <script setup lang="ts">
-import { CartProduct } from '~~/utils/classes/Cart';
+import { Product } from '~~/utils/types'
+const { cart, addToCart } = useCart()
+const productParams = useRoute().params
 
-const cart = useCart()
-const product = useRoute().params
+const { data, error } = await useFetch<Product>("/api/mock/products/" + productParams.id)
+
 
 const handleAddToCart = (e: Event) => {
     e.preventDefault()
 
-    const itemInCart = cart.value.find(item => item.product.id === parseInt(product.id as string))
-
-    if (itemInCart) {
-        itemInCart.incrementQuantity()
-    } else {
-        const newCartItem: CartProduct = new CartProduct({
-            id: parseInt(product.id as string),
-            name: "",
-            title: "",
-            price: 160,
-            available: true
-        })
-
-        cart.value.push(newCartItem)
+    const product: Partial<Product> = {
+        id: parseInt(productParams.id as string),
     }
 
+    addToCart(product)
 }
 
 </script>
@@ -34,13 +25,16 @@ const handleAddToCart = (e: Event) => {
             </figure>
         </div>
         <div id="product-details">
-            <div id="product-price">$160</div>
-            <div id="product-description">asf</div>
+            {{ data }} {{ error }}
+            <div id="product-price">{{ data?.price }}</div>
+            <div id="product-description">{{ data?.description }}</div>
             <button @click="handleAddToCart">Add to cart</button>
         </div>
     </div>
     <div>
-        cart
-        {{ cart }}
+        This is what's in your cart:
+        <ul v-for="cartItem in cart">
+            <li>{{ cartItem }}</li>
+        </ul>
     </div>
 </template>
