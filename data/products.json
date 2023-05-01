@@ -5,7 +5,8 @@
         "title": "Underground Stompers",
         "price": 160,
         "available": true,
-        "variations": []
+        "variations": [],
+        "description": "These elegant leather dress shoes are perfect for any formal occasion. With a classic, timeless design and a comfortable, supportive fit, these shoes will help you make a stylish statement wherever you go."
     },
     {
         "id": 3,
@@ -14,7 +15,8 @@
         "price": 20,
         "available": true,
         "variations": [],
-        "sale": "SALE"
+        "sale": "SALE",
+        "description": "These rugged hiking boots are built to withstand any terrain. With a durable, waterproof design and a comfortable, supportive fit, these boots are the perfect choice for any outdoor adventurer who wants to explore the great outdoors with confidence."
     },
     {
         "id": 7234,
@@ -22,7 +24,7 @@
         "title": "Underground Stompers",
         "price": 80,
         "available": true,
-        "description": "glkdsjlgsd gdsg dsg ",
+        "description": "These running shoes are perfect for athletes who demand both comfort and style. With a lightweight, breathable design and a sleek, modern look, these shoes are the perfect choice for anyone who wants to push their limits while looking great.",
         "variations": []
     },
     {
@@ -32,7 +34,8 @@
         "price": 60,
         "available": true,
         "variations": [],
-        "sale": "CLEARANCE"
+        "sale": "CLEARANCE",
+        "description": "These trendy sneakers are the perfect choice for anyone who wants to stay on top of the latest fashion trends. With a bold, eye-catching design and a comfortable, supportive fit, these shoes will help you stand out from the crowd and make a statement wherever you go."
     },
     {
         "id": 95738,
@@ -41,6 +44,7 @@
         "price": 120,
         "available": true,
         "variations": [],
-        "sale": "LIMITED"
+        "sale": "LIMITED",
+        "description": "These versatile slip-on shoes are perfect for anyone who wants to look stylish and stay comfortable all day long. With a soft, flexible design and a variety of colors and styles to choose from, these shoes are the perfect choice for anyone who wants to elevate their everyday look."
     }
 ]

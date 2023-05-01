@@ -20,4 +20,8 @@ export class CartProduct {
     decrementQuantity() {
         if (this.quantity > 0) this.quantity--
     }
+
+    getProduct() {
+        return this.product
+    }
 }

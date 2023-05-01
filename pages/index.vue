@@ -3,7 +3,6 @@ const cart = useCart()
 
 const { data } = await useFetch("/api/mock/products")
 
-
 let products = JSON.parse(JSON.stringify(data.value))
 products = products!.concat(products)
 products = products.concat(products)
@@ -12,11 +11,12 @@ products = products.concat(products)
 
 </script>
 <template>
-    <h1>Aegis Footwear</h1>
-    <div class="flex flex-wrap justify-start">
-        <div class="flex md:max-w-sm md:w-1/4 sm:w-1/3 w-full m-2" v-for="product in products">
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:max-w-5xl">
+        <div class="" v-for="product in products">
             <figure class="flex flex-auto flex-col">
-                <div class="w-full h-80 bg-slate-500"></div>
+                <div class="w-full bg-slate-500">
+                    <span class="block pt-[100%]"></span>
+                </div>
 
                 <div id="product-info-card" class="flex flex-col justify-start grow p-2 text-sm">
                     <!-- <div id="product-sale" v-if="product.sale">{{ product.sale }}</div> -->
