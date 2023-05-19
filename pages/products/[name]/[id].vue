@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { Product } from '~~/utils/types'
+import { Product } from '@prisma/client'
+import { triggerCartAnimationKey } from '~~/shared/symbols'
 const { addToCart } = useCart()
 const productParams = useRoute().params
 
-const { data, error } = await useFetch<Product>("/api/mock/products/" + productParams.id)
+const { data, error } = await useFetch<Product>("/api/products/" + productParams.id)
 const photos = [
     "/images/akram.jpg",
     "/images/plomp.jpg",
@@ -13,45 +14,84 @@ const photos = [
     "/images/plomp.jpg",
 ]
 
+const triggerCartAnimation = inject(triggerCartAnimationKey)
+
+const buttonDisabled = ref(false)
 const handleAddToCart = (e: Event) => {
     e.preventDefault()
+    
+    buttonDisabled.value = true
+    setTimeout(() => {
+        buttonDisabled.value = false
+    }, 200)
 
+    
     const product: Partial<Product> = {
-        id: parseInt(productParams.id as string),
+        id: productParams.id as string,
+    }
+    
+    addToCart(product)
+    
+    if (triggerCartAnimation) {
+        triggerCartAnimation()
     }
 
-    addToCart(product)
 }
 
 </script>
 
 <template>
-    <div v-if="error">
-        <div class="flex">
-            <span class="mx-auto">
-                This product does not exist or there is an issue with the server
-            </span>
-        </div>
-    </div>
-    <div v-else="!error" class="grid grid-cols-1 sm:grid-cols-12 gap-2 bg-slate-100">
-        <div class="sm:col-span-8">
-            <div class="flex flex-nowrap overflow-x-scroll overflow-y-hidden scroll-smooth bg-red-400 max-h-[80vh]">
-                <figure v-for="photo in photos" class="bg-emerald-500 min-w-[90%] min-h-full max-h-full mr-2">
-                    <img :src="photo" class="object-cover min-w-full min-h-full max-h-full" />
-                </figure>
+    <div class="container max-w-6xl mx-auto">
+        <div v-if="error">
+            <div class="flex">
+                <span class="mx-auto">
+                    This product does not exist or there is an issue with the server
+                </span>
             </div>
         </div>
-        <div id="product-details" class="flex flex-col sm:col-span-4 max-w-full sm:min-w-md sm:max-w-md mx-auto">
-            <div>
-                <pre class="bg-slate-900 text-white p-4 text-xs">{{ data }}</pre>
+        <div v-else="!error" class="grid grid-cols-1 sm:grid-cols-12 gap-2">
+            <div class="sm:col-span-8 rounded">
+                <div
+                    class="flex flex-nowrap overflow-x-scroll overflow-y-hidden scroll-smooth snap-x max-h-[80vh] sm:max-h-[50vh]">
+                    <figure v-for="photo in photos"
+                        class="bg-emerald-500 min-w-[90%] min-h-full max-h-full ml-2 snap-start">
+                        <img :src="photo" class="object-cover min-w-full min-h-full max-h-full" />
+                    </figure>
+                </div>
             </div>
+            <div id="product-details"
+                class="flex flex-col sm:col-span-4 max-w-full sm:min-w-md sm:max-w-md mx-auto px-4 py-2 rounded">
+                <div>
+                    <div>
+                        <pre
+                            class="bg-slate-900 text-white p-4 text-xs whitespace-pre-wrap overflow-auto max-w-full">{{ data }}</pre>
+                    </div>
 
-            <div id="reviews">&star;&star;&star;&star;&star; 778 Reviews</div>
-            <div id="product-feature-title">NEW / SALE / CLEARANCE / LIMITED EDITION</div>
-            <div id="product-name">{{ data?.title }}</div>
-            <div id="product-price">{{ data?.price }}</div>
-            <div id="product-description">{{ data?.description }}</div>
-            <button @click="handleAddToCart">Add to cart</button>
+                    <!-- <div id="reviews">&star;&star;&star;&star;&star; 778 Reviews</div> -->
+                    <div id="product-status">
+                        <span id="product-new" class="text-xs font-semibold">NEW</span>
+                        <span id="product-sale" class="text-xs text-red-400 font-semibold">SALE / CLEARANCE</span>
+                        <span id="product-feature" class="text-xs text-indigo-400 font-semibold">LIMITED EDITION</span>
+                    </div>
+                    <div id="product-main-title" class="my-4">
+                        <div id="product-name" class="text-xl font-semibold">{{ data?.displayName }}</div>
+                        <div id="product-price" class="font-semibold">{{ formatPrice(Number(data?.price)) }}</div>
+                    </div>
+                    <div id="product-description">{{ data?.description }}</div>
+                    <div id="product-actions" class="mt-4">
+                        <PrimaryButton @click="handleAddToCart" :disabled="buttonDisabled" class="w-full rounded-3xl">Add to Cart</PrimaryButton>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
+
+<style scoped>
+#product-sale::before,
+#product-feature::before {
+    content: '\00B7';
+    margin: 0 .5rem;
+    @apply text-black;
+}
+</style>

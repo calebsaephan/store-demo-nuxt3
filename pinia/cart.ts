@@ -1,15 +1,9 @@
-import { Product } from "@prisma/client"
-import { storeToRefs } from "pinia"
-import { useCartStore } from "~/pinia/cart"
-import { CartProduct } from "~~/utils/models/CartProduct"
+import { Product } from '@prisma/client'
+import { defineStore } from 'pinia'
+import { CartProduct } from '~/utils/models/CartProduct'
 
-export const useCart = () => {
-    /**
-     * we shouldn't use classes in nuxt usestate, but in theory this should work
-     * future: can replace with pinia
-     */
-    const cartStore = useCartStore()
-    const { cart } = storeToRefs(cartStore)
+export const useCartStore = defineStore('cart', () => {
+    const cart = ref<CartProduct[]>([])
 
     const loadCart = async () => {
         const data = await $fetch('/api/cart')
@@ -19,7 +13,6 @@ export const useCart = () => {
             const product = new CartProduct(item.product, item.quantity)
             cart.value.push(product)
         })
-        console.log(data, cart);
         
     }
 
@@ -48,13 +41,14 @@ export const useCart = () => {
     const cartSize = computed(() => cart.value.reduce((sum, item) => sum + item.quantity, 0))
 
     return {
-        cart: cart.value,
+        cart,
         cartSize,
         addToCart,
         removeFromCart,
         loadCart
     }
-}
+
+})
 
 async function updateRedisCart(productId: string) {
     await $fetch("/api/cart", {

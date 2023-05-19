@@ -1,6 +1,6 @@
 import { default as data } from "@/data/products.json"
 export default defineEventHandler((event) => {
-    const productId: number = parseInt(event.context.params!.id)
+    const productId = event.context.params!.id
 
     if (!Number.isInteger(productId)) {
         throw createError({
