@@ -1,19 +1,19 @@
 <script setup lang="ts">
 const routes = [
     {
-        to: "/",
+        to: "#",
         name: "All Shoes"
     },
     {
-        to: "/",
+        to: "#",
         name: "Sneakers"
     },
     {
-        to: "/",
+        to: "#",
         name: "Sandals"
     },
     {
-        to: "/",
+        to: "#",
         name: "Boots"
     },
 ]

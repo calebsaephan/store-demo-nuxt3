@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { Product } from '@prisma/client'
+const loading = ref(true)
 const { data: products } = await useFetch<Product[]>("/api/products")
+if (products) loading.value = false
 </script>
 <template>
     <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-        <div class="" v-for="product in products">
+        <div v-if="loading && !products">Loading...</div>
+        <div v-else-if="!loading && !products">No products found</div>
+        <div v-else v-for="product in products">
             <figure class="flex flex-auto flex-col">
                 <div class="w-full bg-slate-500">
                     <span class="block pt-[100%]"></span>
