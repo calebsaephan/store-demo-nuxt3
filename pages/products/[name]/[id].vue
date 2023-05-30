@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Product } from '@prisma/client'
+import { randomUUID } from 'crypto'
 import { triggerCartAnimationKey } from '~~/shared/symbols'
 const { addToCart } = useCart()
 const productParams = useRoute().params
@@ -12,12 +13,54 @@ const { data, error } = await useFetch<Partial<Product>>("/api/products/" + prod
 })
 
 const photos = [
-    "/images/akram.jpg",
-    "/images/plomp.jpg",
-    "/images/akram.jpg",
-    "/images/plomp.jpg",
-    "/images/akram.jpg",
-    "/images/plomp.jpg",
+    {
+        id: "1",
+        imgUrl: "/images/akram.jpg",
+    },
+    {
+        id: "2",
+        imgUrl: "/images/plomp.jpg",
+    },
+    {
+        id: "3",
+        imgUrl: "/images/akram.jpg",
+    },
+    {
+        id: "4",
+        imgUrl: "/images/plomp.jpg",
+    },
+    {
+        id: "5",
+        imgUrl: "/images/akram.jpg",
+    },
+    {
+        id: "6",
+        imgUrl: "/images/plomp.jpg",
+    },
+    {
+        id: "7",
+        imgUrl: "/images/plomp.jpg",
+    },
+    {
+        id: "8",
+        imgUrl: "/images/plomp.jpg",
+    },
+    {
+        id: "9",
+        imgUrl: "/images/plomp.jpg",
+    },
+    {
+        id: "10",
+        imgUrl: "/images/plomp.jpg",
+    },
+    {
+        id: "11",
+        imgUrl: "/images/plomp.jpg",
+    },
+    {
+        id: "12",
+        imgUrl: "/images/plomp.jpg",
+    },
 ]
 
 const triggerCartAnimation = inject(triggerCartAnimationKey)
@@ -58,11 +101,19 @@ const handleAddToCart = (e: Event) => {
         <div v-else class="grid grid-cols-1 sm:grid-cols-12 gap-8">
             <div class="sm:col-span-8 rounded">
                 <div
-                    class="flex flex-nowrap overflow-x-scroll overflow-y-hidden scroll-smooth snap-x max-h-[80vh] sm:max-h-[50vh]">
-                    <figure v-for="photo in photos"
-                        class="bg-emerald-500 min-w-[90%] min-h-full max-h-full ml-2 snap-center">
-                        <img :src="photo" class="object-cover min-w-full min-h-full max-h-full" />
+                    class="flex flex-nowrap overflow-x-scroll overflow-y-hidden scroll-smooth max-h-[80vh] sm:max-h-[50vh]">
+                    <figure v-for="photo in photos" :id="photo.id" class="min-w-[90%] min-h-full max-h-full ml-2">
+                        <img :src="photo.imgUrl" class="object-cover min-w-full min-h-full max-h-full" />
                     </figure>
+                </div>
+                <div id="image-map">
+                    <div class="flex overflow-x-scroll overflow-y-hidden m-4 p-2">
+                        <figure v-for="photo in photos" class="w-32 h-28 p-4 mr-2 shrink-0 grow-0 overflow-hidden">
+                            <a :href="`#${photo.id}`">
+                                <img :src="photo.imgUrl" class="object-fill w-32 h-28" />
+                            </a>
+                        </figure>
+                    </div>
                 </div>
             </div>
             <div id="product-details"
@@ -75,10 +126,11 @@ const handleAddToCart = (e: Event) => {
 
                     <!-- <div id="reviews">&star;&star;&star;&star;&star; 778 Reviews</div> -->
                     <div id="product-status">
-                        <span id="product-new" v-if="data?.status?.includes('new')"
-                            class="text-xs font-semibold">NEW</span>
-                        <span id="product-sale" v-if="data?.status?.includes('sale')" class="text-xs text-red-400 font-semibold">SALE / CLEARANCE</span>
-                        <span id="product-feature" v-if="data?.status?.includes('limited')" class="text-xs text-indigo-400 font-semibold">LIMITED EDITION</span>
+                        <span id="product-new" v-if="data?.status?.includes('new')" class="text-xs font-semibold">NEW</span>
+                        <span id="product-sale" v-if="data?.status?.includes('sale')"
+                            class="text-xs text-red-400 font-semibold">SALE / CLEARANCE</span>
+                        <span id="product-feature" v-if="data?.status?.includes('limited')"
+                            class="text-xs text-indigo-400 font-semibold">LIMITED EDITION</span>
                     </div>
                     <div id="product-main-title" class="my-4">
                         <div id="product-name" class="text-xl font-semibold">{{ data?.displayName }}</div>
@@ -86,7 +138,8 @@ const handleAddToCart = (e: Event) => {
                     </div>
                     <div id="product-description">{{ data?.description }}</div>
                     <div id="product-actions" class="mt-4">
-                        <PrimaryButton @click=" handleAddToCart " :disabled=" buttonDisabled " class="w-full rounded-3xl">Add to
+                        <PrimaryButton @click="handleAddToCart" :disabled="buttonDisabled" class="w-full rounded-3xl">
+                            Add to
                             Cart</PrimaryButton>
                     </div>
                 </div>
@@ -101,4 +154,5 @@ const handleAddToCart = (e: Event) => {
     content: '\00B7';
     margin: 0 .5rem;
     @apply text-black;
-}</style>
+}
+</style>
