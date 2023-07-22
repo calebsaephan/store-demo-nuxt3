@@ -1,5 +1,6 @@
 {
   "private": true,
+  "version": "1.0.0",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -28,9 +29,11 @@
   "dependencies": {
     "@pinia/nuxt": "^0.4.10",
     "@prisma/client": "^4.14.0",
+    "@stripe/stripe-js": "^1.54.0",
     "@tailwindcss/container-queries": "^0.1.1",
     "@upstash/redis": "^1.20.6",
-    "pinia": "^2.0.36"
+    "pinia": "^2.0.36",
+    "stripe": "^12.9.0"
   },
   "overrides": {
     "vue": "latest"

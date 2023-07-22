@@ -1,18 +1,7 @@
 <script setup lang="ts">
 import { triggerCartAnimationKey } from '~~/shared/symbols'
-import crypto from "crypto"
-import { useCartStore } from '~/pinia/cart'
-import { storeToRefs } from 'pinia'
 
-const sessionCookie = useCookie('session')
-sessionCookie.value = sessionCookie.value || crypto.randomUUID()
-
-useSession(sessionCookie.value)
-
-const cartStore = useCartStore()
-const { loadCart } = cartStore
-const { cartSize } = storeToRefs(cartStore)
-loadCart()
+const cart = useCart()
 
 const cartUpdateAnimation = ref(false)
 
@@ -25,18 +14,30 @@ const triggerCartAnimation = () => {
 
 provide(triggerCartAnimationKey, triggerCartAnimation)
 
+const auth = useAuth()
+
+const handleLogout = () => {
+    auth.logout()
+}
+
 </script>
 <template>
     <div class="flex justify-between py-2 px-4">
-        <div>Menu</div>
+        <div></div>
         <NuxtLink to="/">
-            <h1 class="text-xl font-bold">Sike Footwear</h1>
+            <h1 class="text-xl font-bold">Shoe Store</h1>
         </NuxtLink>
         <div>
             <NuxtLink to="/cart">
                 Cart
-                <span :class="{ 'cart-animation': cartUpdateAnimation }" class="rounded px-1">{{ cartSize }}</span>
+                <span :class="{ 'cart-animation': cartUpdateAnimation }" class="rounded px-1">{{ cart.size }}</span>
+            </NuxtLink> |
+            <NuxtLink to="/login" v-if="!auth.isAuthenticated.value">
+                Sign In
             </NuxtLink>
+            <PrimaryButton @click="handleLogout" v-else>
+                Sign Out
+            </PrimaryButton>
         </div>
     </div>
     <div>

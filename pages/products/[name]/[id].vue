@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { Product } from '@prisma/client'
-import { randomUUID } from 'crypto'
 import { triggerCartAnimationKey } from '~~/shared/symbols'
-const { addToCart } = useCart()
+const cart = useCart()
 const productParams = useRoute().params
 
 const { data, error } = await useFetch<Partial<Product>>("/api/products/" + productParams.id, {
@@ -79,7 +78,7 @@ const handleAddToCart = (e: Event) => {
         id: productParams.id as string,
     }
 
-    addToCart(product)
+    cart.add(product)
 
     if (triggerCartAnimation) {
         triggerCartAnimation()
@@ -107,7 +106,7 @@ const handleAddToCart = (e: Event) => {
                     </figure>
                 </div>
                 <div id="image-map">
-                    <div class="flex overflow-x-scroll overflow-y-hidden m-4 p-2">
+                    <div class="flex flex-nowrap overflow-x-scroll overflow-y-hidden m-4 p-2 scroll-smooth">
                         <figure v-for="photo in photos" class="w-32 h-28 p-4 mr-2 shrink-0 grow-0 overflow-hidden">
                             <a :href="`#${photo.id}`">
                                 <img :src="photo.imgUrl" class="object-fill w-32 h-28" />

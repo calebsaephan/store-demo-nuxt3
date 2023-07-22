@@ -1,21 +1,23 @@
 <script setup lang="ts">
 import { formatPrice } from "~/utils/price"
-import { useCartStore } from "~/pinia/cart"
-import { storeToRefs } from "pinia"
-const cartStore = useCartStore()
-const { cart } = storeToRefs(cartStore)
+const cart = useCart()
 
 const handleRemoveItem = async (e: Event, productId: string) => {
     e.preventDefault()
-    cartStore.removeFromCart(productId)
+    cart.remove(productId)
     await useFetch(`/api/cart/remove?productId=${productId}`)
 }
 
+const handleCheckout = async (e: Event) => {
+    const { data } = await useFetch("/api/checkout")
+
+    await navigateTo(data.value, { external: true })
+}
 </script>
 <template>
     <div class="container mx-auto">
         <ul>
-            <li v-for="item in cart" class="py-4 border-b-[1px]">
+            <li v-for="item in cart.items" class="py-4 border-b-[1px]">
                 <div class="flex">
                     <div>
                         <div class="w-[100px] h-[100px] bg-slate-500"></div>
@@ -34,6 +36,7 @@ const handleRemoveItem = async (e: Event, productId: string) => {
             </li>
         </ul>
 
+        <button @click="handleCheckout">Checkout</button>
     </div>
 </template>
 <style scoped></style>

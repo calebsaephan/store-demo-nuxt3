@@ -3,6 +3,9 @@ export default defineNuxtConfig({
   runtimeConfig: {
     upstashRedisRestUrl: "",
     upstashRedisRestToken: "",
+    stripeKey: "",
+    stripeSuccessUrl: "",
+    stripeCancelUrl: "",
     public: {
     }
   },

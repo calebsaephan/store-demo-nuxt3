@@ -9,10 +9,17 @@ datasource db {
 }
 
 model Product {
-  id String @id @default(uuid())
-  sku String
-  name String
+  id          String @id @default(uuid())
+  sku         String
+  name        String
   displayName String
   description String
-  price Float
+  price       Float
+}
+
+model User {
+  id       String @id @default(uuid())
+  username String
+  password String
+  cartId   String @default("")
 }

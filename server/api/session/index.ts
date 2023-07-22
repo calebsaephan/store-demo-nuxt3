@@ -1,9 +1,13 @@
-export default defineEventHandler((event) => {
-    const session = getCookie(event, 'session')
+import crypto from "crypto"
 
-    if (!session) {
-        setCookie(event, 'session', crypto.randomUUID())
+export default defineEventHandler((event) => {
+    const sessionId = getCookie(event, "session")
+
+    if (!sessionId) {
+        const newSession = crypto.randomUUID()
+        setCookie(event, 'session', newSession)
+        return newSession
     }
 
-    return { session }
+    return sessionId
 })

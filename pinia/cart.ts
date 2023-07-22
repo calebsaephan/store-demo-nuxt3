@@ -3,57 +3,94 @@ import { defineStore } from 'pinia'
 import { CartProduct } from '~/utils/models/CartProduct'
 
 export const useCartStore = defineStore('cart', () => {
-    const cart = ref<CartProduct[]>([])
+    const items = ref<CartProduct[]>([])
 
-    const loadCart = async () => {
-        const data = await $fetch('/api/cart')
-        cart.value = []
+    const load = async () => {
+        const { data } = await useFetch('/api/cart')
+        items.value = []
 
-        data.forEach((item) => {
-            const product = new CartProduct(item.product, item.quantity)
-            cart.value.push(product)
-        })
-        
+        if (data.value) {
+            data.value.forEach((item) => {
+                const product = new CartProduct(item.product, item.quantity)
+                items.value.push(product)
+            })
+        }
+
     }
 
-    const addToCart = async (product: Partial<Product>) => {
-        const itemExistsInCart = cart.value.find(item => item.product?.id === product.id)
+    const add = async (product: Partial<Product>, quantity: number) => {
+        const itemExistsInCart = items.value.find(item => item.product?.id === product.id)
 
         if (itemExistsInCart) {
             itemExistsInCart.incrementQuantity()
-            updateRedisCart(itemExistsInCart.product.id)
+            updateRedisCart(itemExistsInCart.product.id, quantity)
         } else {
-            const data = await $fetch<Product>("/api/products/" + product.id)
+            const { data } = await useFetch<Product>("/api/products/" + product.id)
 
-            if (data) {
-                const newCartItem: CartProduct = new CartProduct(data)
-                cart.value.push(newCartItem)
-                updateRedisCart(newCartItem.product.id)
+            if (data.value) {
+                const newCartItem: CartProduct = new CartProduct(data.value)
+                newCartItem.quantity = quantity ?? 1
+                items.value.push(newCartItem)
+                updateRedisCart(newCartItem.product.id, quantity)
             }
         }
 
     }
 
-    const removeFromCart = async (productId: Product["id"]) => {
-        cart.value = cart.value.filter((item) => item.product.id !== productId)
+    const remove = async (productId: Product["id"]) => {
+        items.value = items.value.filter((item) => item.product.id !== productId)
     }
 
-    const cartSize = computed(() => cart.value.reduce((sum, item) => sum + item.quantity, 0))
+    const size = computed(() => items.value.reduce((sum, item) => sum + item.quantity, 0))
+
+    const transfer = async (newSession: string) => {
+        const oldSession = useCookie("session")
+
+        if (!newSession) {
+            newSession = oldSession.value!
+            await useFetch("/api/cart/user", {
+                method: "PUT",
+                body: {
+                    cartId: newSession
+                }
+            })
+        } else if (oldSession.value != newSession) {
+            const oldCart = items.value
+
+            await useFetch("/api/session", {
+                method: "PUT"
+            })
+
+            load()
+
+            for (let i = 0; i < oldCart.length; i++) {
+                add(oldCart[i].product, oldCart[i].quantity)
+            }
+        } else {
+            await useFetch("/api/session", {
+                method: "PUT"
+            })
+        }
+
+        load()
+    }
 
     return {
-        cart,
-        cartSize,
-        addToCart,
-        removeFromCart,
-        loadCart
+        items,
+        size,
+        add,
+        remove,
+        load,
+        transfer
     }
 
 })
 
-async function updateRedisCart(productId: string) {
+async function updateRedisCart(productId: string, quantity: number) {
     await $fetch("/api/cart", {
         method: "PUT", body: {
-            productId: productId
+            productId: productId,
+            quantity: quantity
         }
     })
 }
