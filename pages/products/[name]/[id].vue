@@ -78,7 +78,7 @@ const handleAddToCart = (e: Event) => {
         id: productParams.id as string,
     }
 
-    cart.add(product)
+    cart.add(product, 1)
 
     if (triggerCartAnimation) {
         triggerCartAnimation()
