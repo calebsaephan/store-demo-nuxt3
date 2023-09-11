@@ -4,63 +4,8 @@ import { triggerCartAnimationKey } from '~~/shared/symbols'
 const cart = useCart()
 const productParams = useRoute().params
 
-const { data, error } = await useFetch<Partial<Product>>("/api/products/" + productParams.id, {
-    transform: (d: Partial<Product>) => {
-        Object.assign(d, { status: ["new"] })
-        return d
-    }
-})
-
-const photos = [
-    {
-        id: "1",
-        imgUrl: "/images/akram.jpg",
-    },
-    {
-        id: "2",
-        imgUrl: "/images/plomp.jpg",
-    },
-    {
-        id: "3",
-        imgUrl: "/images/akram.jpg",
-    },
-    {
-        id: "4",
-        imgUrl: "/images/plomp.jpg",
-    },
-    {
-        id: "5",
-        imgUrl: "/images/akram.jpg",
-    },
-    {
-        id: "6",
-        imgUrl: "/images/plomp.jpg",
-    },
-    {
-        id: "7",
-        imgUrl: "/images/plomp.jpg",
-    },
-    {
-        id: "8",
-        imgUrl: "/images/plomp.jpg",
-    },
-    {
-        id: "9",
-        imgUrl: "/images/plomp.jpg",
-    },
-    {
-        id: "10",
-        imgUrl: "/images/plomp.jpg",
-    },
-    {
-        id: "11",
-        imgUrl: "/images/plomp.jpg",
-    },
-    {
-        id: "12",
-        imgUrl: "/images/plomp.jpg",
-    },
-]
+const { data, error } = await useFetch("/api/products/" + productParams.id)
+Object.assign(data, { status: ["new"] })
 
 const triggerCartAnimation = inject(triggerCartAnimationKey)
 
@@ -73,19 +18,13 @@ const handleAddToCart = (e: Event) => {
         buttonDisabled.value = false
     }, 200)
 
-
-    const product: Partial<Product> = {
-        id: productParams.id as string,
-    }
-
-    cart.add(product, 1)
+    cart.add(data.value, 1)
 
     if (triggerCartAnimation) {
         triggerCartAnimation()
     }
 
 }
-
 </script>
 
 <template>
@@ -101,15 +40,15 @@ const handleAddToCart = (e: Event) => {
             <div class="sm:col-span-8 rounded">
                 <div
                     class="flex flex-nowrap overflow-x-scroll overflow-y-hidden scroll-smooth max-h-[80vh] sm:max-h-[50vh]">
-                    <figure v-for="photo in photos" :id="photo.id" class="min-w-[90%] min-h-full max-h-full ml-2">
-                        <img :src="photo.imgUrl" class="object-cover min-w-full min-h-full max-h-full" />
+                    <figure v-for="image in data.images" :id="image.id" class="min-w-[90%] min-h-full max-h-full ml-2">
+                        <img :src="image.url" class="object-cover min-w-full min-h-full max-h-full" />
                     </figure>
                 </div>
                 <div id="image-map">
                     <div class="flex flex-nowrap overflow-x-scroll overflow-y-hidden m-4 p-2 scroll-smooth">
-                        <figure v-for="photo in photos" class="w-32 h-28 p-4 mr-2 shrink-0 grow-0 overflow-hidden">
-                            <a :href="`#${photo.id}`">
-                                <img :src="photo.imgUrl" class="object-fill w-32 h-28" />
+                        <figure v-for="image in data.images" class="w-32 h-28 p-4 mr-2 shrink-0 grow-0 overflow-hidden">
+                            <a :href="`#${image.id}`">
+                                <img :src="image.url" class="object-fill w-32 h-28" />
                             </a>
                         </figure>
                     </div>

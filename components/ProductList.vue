@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Product } from '@prisma/client'
+import { Product, Image } from '@prisma/client'
 const loading = ref(true)
-const { data: products } = await useFetch<Product[]>("/api/products")
+const { data: products } = await useFetch<(Product & Image)[]>("/api/products")
 if (products) loading.value = false
 </script>
 <template>
@@ -11,7 +11,10 @@ if (products) loading.value = false
         <div v-else v-for="product in products">
             <figure class="flex flex-auto flex-col">
                 <div class="w-full bg-slate-500">
-                    <span class="block pt-[100%]"></span>
+                    <figure v-if="product.images[0]" :id="product.images[0].id">
+                        <img :src="product.images[0].url" class="object-cover min-w-full min-h-full max-h-full" />
+                    </figure>
+                    <span v-else class="block pt-[100%]"></span>
                 </div>
 
                 <div id="product-info-card" class="flex flex-col justify-start grow py-2 text-sm">
@@ -26,7 +29,7 @@ if (products) loading.value = false
                     </div>
                     <div id="product-subtitle" class="text-xs mb-2">Men's Shoe</div>
                     <div id="product-variety" v-if="product.variations"></div>
-                    <div id="product description">{{ product.description }}</div>
+                    <div id="product description" class="line-clamp-2">{{ product.description }}</div>
                 </div>
             </figure>
         </div>

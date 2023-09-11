@@ -20,7 +20,10 @@ const handleCheckout = async (e: Event) => {
             <li v-for="item in cart.items" class="py-4 border-b-[1px]">
                 <div class="flex">
                     <div>
-                        <div class="w-[100px] h-[100px] bg-slate-500"></div>
+                        <div class="w-[100px] h-[100px] bg-slate-500">
+                            <img v-if="item.product.images" :src="item.product.images[0].url"
+                                class="object-cover min-w-full min-h-full max-h-full" />
+                        </div>
                     </div>
                     <div class="flex flex-col pl-4">
                         <span class="text-xl font-semibold">{{ item.product.displayName }}</span>

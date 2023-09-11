@@ -9,12 +9,14 @@ datasource db {
 }
 
 model Product {
-  id          String @id @default(uuid())
+  id          String  @id @default(uuid())
   sku         String
   name        String
   displayName String
-  description String
+  description String  @db.LongText
   price       Float
+  images      Image[]
+  videos      Video[]
 }
 
 model User {
@@ -22,4 +24,23 @@ model User {
   username String
   password String
   cartId   String @default("")
+}
+
+model Image {
+  id        Int      @id @default(autoincrement())
+  url       String
+  hero      Boolean  @default(false)
+  Product   Product? @relation(fields: [productId], references: [id])
+  productId String?
+
+  @@index([productId])
+}
+
+model Video {
+  id        Int      @id @default(autoincrement())
+  url       String
+  Product   Product? @relation(fields: [productId], references: [id])
+  productId String?
+
+  @@index([productId])
 }
